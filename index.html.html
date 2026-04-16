@@ -1,0 +1,497 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --space-font:'Space Grotesk',sans-serif;
+    --mono-font:'Space Mono',monospace;
+    --star-color:rgba(255,255,255,0.7);
+    --glow-purple:#7c3aed;
+    --glow-blue:#2563eb;
+    --glow-teal:#0d9488;
+    --accent:#a78bfa;
+    --accent2:#38bdf8;
+  }
+  body,html{background:#000;color:#e2e8f0}
+  #portfolio{
+    font-family:var(--space-font);
+    background:#050510;
+    color:#e2e8f0;
+    min-height:100vh;
+    position:relative;
+    overflow-x:hidden;
+  }
+  #stars-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+  .content{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:0 20px 80px}
+
+  /* NAV */
+  nav{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:20px 0;border-bottom:1px solid rgba(167,139,250,0.15);
+    position:sticky;top:0;z-index:100;
+    background:rgba(5,5,16,0.85);backdrop-filter:blur(12px);
+  }
+  .nav-logo{font-family:var(--mono-font);font-size:13px;color:var(--accent);letter-spacing:2px}
+  .nav-links{display:flex;gap:20px}
+  .nav-links a{
+    font-size:12px;letter-spacing:1.5px;text-transform:uppercase;
+    color:#94a3b8;text-decoration:none;transition:color 0.2s;cursor:pointer
+  }
+  .nav-links a:hover{color:var(--accent)}
+
+  /* HERO */
+  .hero{padding:80px 0 60px;text-align:center}
+  .hero-badge{
+    display:inline-flex;align-items:center;gap:8px;
+    border:1px solid rgba(167,139,250,0.3);border-radius:20px;
+    padding:6px 16px;font-size:12px;letter-spacing:2px;text-transform:uppercase;
+    color:var(--accent);margin-bottom:28px;
+    background:rgba(124,58,237,0.08)
+  }
+  .status-dot{width:7px;height:7px;border-radius:50%;background:#4ade80;animation:pulse-dot 2s infinite}
+  @keyframes pulse-dot{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(74,222,128,0.4)}50%{opacity:0.8;box-shadow:0 0 0 5px rgba(74,222,128,0)}}
+  h1.hero-name{
+    font-size:clamp(36px,7vw,64px);font-weight:700;line-height:1.1;
+    background:linear-gradient(135deg,#e2e8f0 0%,var(--accent) 50%,var(--accent2) 100%);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    margin-bottom:12px;letter-spacing:-1px
+  }
+  .hero-role{
+    font-family:var(--mono-font);font-size:14px;color:#64748b;
+    letter-spacing:3px;text-transform:uppercase;margin-bottom:24px
+  }
+  .hero-summary{
+    font-size:16px;line-height:1.8;color:#94a3b8;max-width:560px;margin:0 auto 36px
+  }
+  .hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .btn-primary{
+    padding:12px 28px;border-radius:8px;font-size:13px;font-weight:500;
+    background:linear-gradient(135deg,var(--glow-purple),var(--glow-blue));
+    color:#fff;border:none;cursor:pointer;letter-spacing:0.5px;
+    text-decoration:none;display:inline-block;transition:opacity 0.2s
+  }
+  .btn-primary:hover{opacity:0.85}
+  .btn-outline{
+    padding:12px 28px;border-radius:8px;font-size:13px;font-weight:500;
+    background:transparent;color:var(--accent);
+    border:1px solid rgba(167,139,250,0.4);cursor:pointer;
+    text-decoration:none;display:inline-block;transition:all 0.2s
+  }
+  .btn-outline:hover{background:rgba(167,139,250,0.08)}
+
+  /* SECTIONS */
+  section{padding:64px 0}
+  .section-label{
+    font-family:var(--mono-font);font-size:11px;letter-spacing:3px;
+    text-transform:uppercase;color:var(--accent);margin-bottom:8px
+  }
+  .section-title{
+    font-size:28px;font-weight:600;color:#f1f5f9;margin-bottom:40px;
+    border-bottom:1px solid rgba(167,139,250,0.1);padding-bottom:16px
+  }
+
+  /* EDUCATION */
+  .edu-card{
+    border:1px solid rgba(167,139,250,0.15);border-radius:12px;
+    padding:24px 28px;background:rgba(124,58,237,0.05);
+    display:flex;gap:20px;align-items:flex-start
+  }
+  .edu-icon{
+    width:44px;height:44px;border-radius:10px;
+    background:linear-gradient(135deg,rgba(124,58,237,0.3),rgba(37,99,235,0.3));
+    display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0
+  }
+  .edu-title{font-size:16px;font-weight:500;color:#f1f5f9;margin-bottom:4px}
+  .edu-sub{font-size:13px;color:var(--accent);margin-bottom:4px}
+  .edu-meta{font-size:12px;color:#64748b}
+
+  /* SKILLS */
+  .skills-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
+  .skill-group{
+    border:1px solid rgba(56,189,248,0.15);border-radius:10px;
+    padding:18px;background:rgba(13,148,136,0.04)
+  }
+  .skill-group-title{
+    font-family:var(--mono-font);font-size:11px;letter-spacing:2px;
+    text-transform:uppercase;color:var(--accent2);margin-bottom:12px
+  }
+  .skill-tags{display:flex;flex-wrap:wrap;gap:6px}
+  .skill-tag{
+    font-size:12px;padding:4px 10px;border-radius:6px;
+    background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.2);
+    color:#94a3b8
+  }
+
+  /* PROJECTS */
+  .projects-grid{display:grid;gap:20px}
+  .project-card{
+    border:1px solid rgba(167,139,250,0.15);border-radius:14px;
+    padding:28px;background:rgba(10,10,30,0.6);
+    transition:border-color 0.3s,transform 0.2s;cursor:default;
+    position:relative;overflow:hidden
+  }
+  .project-card::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:2px;
+    background:linear-gradient(90deg,var(--glow-purple),var(--glow-blue),var(--glow-teal));
+    opacity:0;transition:opacity 0.3s
+  }
+  .project-card:hover{border-color:rgba(167,139,250,0.35);transform:translateY(-2px)}
+  .project-card:hover::before{opacity:1}
+  .project-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+  .project-name{font-size:18px;font-weight:600;color:#f1f5f9}
+  .project-type{
+    font-size:11px;padding:3px 10px;border-radius:20px;
+    background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);
+    color:var(--accent);white-space:nowrap
+  }
+  .project-desc{font-size:14px;line-height:1.7;color:#94a3b8;margin-bottom:18px}
+  .project-techs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+  .tech-pill{
+    font-size:11px;padding:3px 10px;border-radius:6px;
+    background:rgba(15,23,42,0.8);border:1px solid rgba(148,163,184,0.15);
+    color:#64748b;font-family:var(--mono-font)
+  }
+  .project-link{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:13px;font-weight:500;color:var(--accent2);
+    text-decoration:none;border:1px solid rgba(56,189,248,0.25);
+    padding:8px 16px;border-radius:8px;transition:all 0.2s;background:rgba(56,189,248,0.05)
+  }
+  .project-link:hover{background:rgba(56,189,248,0.12);border-color:rgba(56,189,248,0.4)}
+
+  /* CERTS */
+  .certs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+  .cert-card{
+    border:1px solid rgba(167,139,250,0.12);border-radius:10px;
+    padding:18px 20px;background:rgba(10,10,30,0.6);
+    cursor:pointer;transition:all 0.25s;position:relative
+  }
+  .cert-card:hover{border-color:rgba(167,139,250,0.35);background:rgba(124,58,237,0.08)}
+  .cert-card.expanded{border-color:var(--accent);background:rgba(124,58,237,0.1)}
+  .cert-header{display:flex;align-items:flex-start;gap:12px}
+  .cert-icon{font-size:22px;flex-shrink:0;margin-top:2px}
+  .cert-name{font-size:13px;font-weight:500;color:#e2e8f0;line-height:1.4;margin-bottom:4px}
+  .cert-org{font-size:11px;color:var(--accent);letter-spacing:0.5px}
+  .cert-details{
+    margin-top:14px;padding-top:14px;border-top:1px solid rgba(167,139,250,0.1);
+    font-size:12px;line-height:1.7;color:#94a3b8;display:none
+  }
+  .cert-card.expanded .cert-details{display:block}
+  .cert-date{
+    display:inline-block;margin-top:8px;font-size:11px;font-family:var(--mono-font);
+    color:var(--accent2);background:rgba(56,189,248,0.08);
+    padding:2px 8px;border-radius:4px;border:1px solid rgba(56,189,248,0.15)
+  }
+  .cert-arrow{
+    position:absolute;top:18px;right:16px;font-size:14px;color:#475569;
+    transition:transform 0.25s
+  }
+  .cert-card.expanded .cert-arrow{transform:rotate(180deg)}
+
+  /* CONNECT */
+  .connect-grid{display:flex;gap:16px;flex-wrap:wrap}
+  .connect-card{
+    flex:1;min-width:180px;border:1px solid rgba(167,139,250,0.15);border-radius:12px;
+    padding:24px;text-align:center;text-decoration:none;
+    background:rgba(10,10,30,0.6);transition:all 0.25s;
+    display:flex;flex-direction:column;align-items:center;gap:10px
+  }
+  .connect-card:hover{border-color:rgba(167,139,250,0.4);background:rgba(124,58,237,0.1);transform:translateY(-2px)}
+  .connect-icon{font-size:28px}
+  .connect-label{font-size:13px;font-weight:500;color:#f1f5f9}
+  .connect-sub{font-size:11px;color:#64748b}
+
+  /* AWARDS */
+  .awards-list{display:flex;flex-direction:column;gap:12px}
+  .award-item{
+    display:flex;gap:16px;align-items:flex-start;
+    border:1px solid rgba(250,204,21,0.12);border-radius:10px;
+    padding:18px 20px;background:rgba(250,204,21,0.03)
+  }
+  .award-icon{font-size:24px;flex-shrink:0}
+  .award-title{font-size:14px;font-weight:500;color:#f1f5f9;margin-bottom:4px}
+  .award-org{font-size:12px;color:#facc15;margin-bottom:6px}
+  .award-desc{font-size:12px;color:#64748b;line-height:1.6}
+
+  /* SOFT SKILLS */
+  .soft-pills{display:flex;flex-wrap:wrap;gap:10px}
+  .soft-pill{
+    font-size:13px;padding:8px 18px;border-radius:20px;
+    background:rgba(13,148,136,0.08);border:1px solid rgba(13,148,136,0.2);
+    color:#94a3b8
+  }
+
+  /* SCROLL */
+  ::-webkit-scrollbar{width:4px}
+  ::-webkit-scrollbar-track{background:transparent}
+  ::-webkit-scrollbar-thumb{background:rgba(167,139,250,0.2);border-radius:2px}
+</style>
+
+<div id="portfolio">
+  <canvas id="stars-canvas"></canvas>
+
+  <div class="content">
+    <nav>
+      <div class="nav-logo">AMN.DEV</div>
+      <div class="nav-links">
+        <a onclick="scrollTo('about')">About</a>
+        <a onclick="scrollTo('projects')">Projects</a>
+        <a onclick="scrollTo('certs')">Certs</a>
+        <a onclick="scrollTo('connect')">Connect</a>
+      </div>
+    </nav>
+
+    <!-- HERO -->
+    <div id="about" class="hero">
+      <div class="hero-badge">
+        <span class="status-dot"></span>
+        Aspiring Full Stack Developer
+      </div>
+      <h1 class="hero-name">Arjun Murlidharan Nair</h1>
+      <div class="hero-role">// Building from Coimbatore · Open to Opportunities</div>
+      <p class="hero-summary">
+        Passionate about crafting impactful web experiences with React, Next.js and modern web tech. 
+        A tech and space enthusiast who believes the best interfaces feel out of this world.
+      </p>
+      <div class="hero-cta">
+        <a class="btn-primary" href="https://www.linkedin.com/in/arjun-murlidharan-nair-68a8a2360" target="_blank">View LinkedIn</a>
+        <a class="btn-outline" href="https://github.com/Arjunnair2005" target="_blank">GitHub Profile</a>
+      </div>
+    </div>
+
+    <!-- EDUCATION -->
+    <section>
+      <div class="section-label">// Education</div>
+      <div class="section-title">Academic Background</div>
+      <div class="edu-card">
+        <div class="edu-icon">🎓</div>
+        <div>
+          <div class="edu-title">Bachelor of Computer Applications (BCA)</div>
+          <div class="edu-sub">Sree Narayana Guru College · Bharathiar University</div>
+          <div class="edu-meta">Jun 2023 – Present · Coimbatore, Tamil Nadu</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section>
+      <div class="section-label">// Tech Stack</div>
+      <div class="section-title">Technical Skills</div>
+      <div class="skills-grid">
+        <div class="skill-group">
+          <div class="skill-group-title">Languages</div>
+          <div class="skill-tags">
+            <span class="skill-tag">C</span><span class="skill-tag">C++</span>
+            <span class="skill-tag">Java</span><span class="skill-tag">Python</span>
+            <span class="skill-tag">JavaScript</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-title">Frontend</div>
+          <div class="skill-tags">
+            <span class="skill-tag">HTML5</span><span class="skill-tag">CSS3</span>
+            <span class="skill-tag">React.js</span><span class="skill-tag">Next.js</span>
+            <span class="skill-tag">Tailwind CSS</span><span class="skill-tag">Shadcn UI</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-title">Backend & DB</div>
+          <div class="skill-tags">
+            <span class="skill-tag">Node.js</span><span class="skill-tag">MySQL</span>
+            <span class="skill-tag">MongoDB</span><span class="skill-tag">PostgreSQL</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-title">Cloud & Tools</div>
+          <div class="skill-tags">
+            <span class="skill-tag">AWS</span><span class="skill-tag">Git</span>
+            <span class="skill-tag">GitHub</span><span class="skill-tag">Salesforce</span>
+            <span class="skill-tag">VS Code</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-title">OS & Platforms</div>
+          <div class="skill-tags">
+            <span class="skill-tag">Windows</span><span class="skill-tag">Linux Mint</span>
+            <span class="skill-tag">Kali</span><span class="skill-tag">Ubuntu</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-title">Soft Skills</div>
+          <div class="skill-tags">
+            <span class="skill-tag">Leadership</span><span class="skill-tag">Critical Thinking</span>
+            <span class="skill-tag">Adaptability</span><span class="skill-tag">Time Management</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AWARDS -->
+    <section>
+      <div class="section-label">// Recognition</div>
+      <div class="section-title">Awards</div>
+      <div class="awards-list">
+        <div class="award-item">
+          <div class="award-icon">🏆</div>
+          <div>
+            <div class="award-title">Best Outgoing Student · Apr 2026</div>
+            <div class="award-org">Department of Computer Science – BCA, Sree Narayana Guru College</div>
+            <div class="award-desc">Recognized for consistent academic performance, leadership, and overall contribution to the department.</div>
+          </div>
+        </div>
+        <div class="award-item">
+          <div class="award-icon">🌟</div>
+          <div>
+            <div class="award-title">Best NSS Volunteer · Apr 2026</div>
+            <div class="award-org">NSS, Sree Narayana Guru College</div>
+            <div class="award-desc">Led cleanliness drives, blood donation camps and awareness programs. Recognized for outstanding community service.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects">
+      <div class="section-label">// Work</div>
+      <div class="section-title">Projects</div>
+      <div class="projects-grid">
+        <div class="project-card">
+          <div class="project-header">
+            <div class="project-name">AI Career Coach</div>
+            <span class="project-type">Web App</span>
+          </div>
+          <div class="project-desc">
+            An AI-powered career guidance platform with resume suggestions, interview Q&amp;A, and personalized skill recommendations. Features a relational PostgreSQL schema for persistent user data and session history.
+          </div>
+          <div class="project-techs">
+            <span class="tech-pill">Next.js</span><span class="tech-pill">Node.js</span>
+            <span class="tech-pill">Gemini API</span><span class="tech-pill">PostgreSQL</span>
+            <span class="tech-pill">Shadcn UI</span><span class="tech-pill">Tailwind CSS</span>
+            <span class="tech-pill">Render</span>
+          </div>
+          <a class="project-link" href="https://ai-career-coach-4wa6.onrender.com/" target="_blank">
+            ↗ View Live
+          </a>
+        </div>
+        <div class="project-card">
+          <div class="project-header">
+            <div class="project-name">Softing — Startup Landing Page</div>
+            <span class="project-type">Internship</span>
+          </div>
+          <div class="project-desc">
+            Responsive startup landing page designed and deployed during internship at Ascentz Technologies. Integrated EmailJS for serverless contact form submissions and hosted on GitHub Pages.
+          </div>
+          <div class="project-techs">
+            <span class="tech-pill">HTML5</span><span class="tech-pill">CSS3</span>
+            <span class="tech-pill">JavaScript</span><span class="tech-pill">EmailJS</span>
+            <span class="tech-pill">GitHub Pages</span>
+          </div>
+          <a class="project-link" href="https://arjunnair2005.github.io/Internship-Project/" target="_blank">
+            ↗ View Live
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- CERTS -->
+    <section id="certs">
+      <div class="section-label">// Learning</div>
+      <div class="section-title">Certificates (click to expand)</div>
+      <div class="certs-grid" id="certs-grid"></div>
+    </section>
+
+    <!-- CONNECT -->
+    <section id="connect">
+      <div class="section-label">// Reach Out</div>
+      <div class="section-title">Connect</div>
+      <div class="connect-grid">
+        <a class="connect-card" href="https://www.linkedin.com/in/arjun-murlidharan-nair-68a8a2360" target="_blank">
+          <div class="connect-icon">💼</div>
+          <div class="connect-label">LinkedIn</div>
+          <div class="connect-sub">Let's connect professionally</div>
+        </a>
+        <a class="connect-card" href="https://github.com/Arjunnair2005" target="_blank">
+          <div class="connect-icon">⬡</div>
+          <div class="connect-label">GitHub</div>
+          <div class="connect-sub">See my repositories</div>
+        </a>
+        <a class="connect-card" href="mailto:arjunmuralinair2005@gmail.com">
+          <div class="connect-icon">✉</div>
+          <div class="connect-label">Email</div>
+          <div class="connect-sub">arjunmuralinair2005@gmail.com</div>
+        </a>
+      </div>
+    </section>
+
+    <div style="text-align:center;padding:20px 0;font-family:'Space Mono',monospace;font-size:11px;color:#334155;letter-spacing:2px">
+      BUILT WITH CURIOSITY · ARJUN MURLIDHARAN NAIR © 2026
+    </div>
+  </div>
+</div>
+
+<script>
+const certs=[
+  {icon:"☁",name:"Cloud Computing",org:"JB International Skill Park",date:"Mar 2025",status:"Exam Completed (Result awaited)",desc:"Covered basics of cloud models and deployment types in AWS."},
+  {icon:"🔒",name:"Cyber Security",org:"JB International Skill Park",date:"Jul 2025",status:"Exam Completed (Result awaited)",desc:"Basic security principles, types of cyber attacks, network security, and ethical practices."},
+  {icon:"🤖",name:"Artificial Intelligence",org:"JB International Skill Park",date:"Feb 2026",status:"Exam Completed (Result awaited)",desc:"AI concepts including ML, DL, NLP, computer vision, and AI ethics."},
+  {icon:"🐍",name:"Foundation of Coding with Python",org:"Infosys Springboard",date:"Mar 2025",status:"Completed",desc:"Python programming, variables, data types, control structures, and problem-solving."},
+  {icon:"🌐",name:"Fundamentals of Web Development",org:"Edunet IBM Skillsbuild",date:"Aug 2025",status:"Completed",desc:"HTML, CSS, JavaScript, responsive design, and building interactive web pages."},
+  {icon:"⚡",name:"Salesforce Developer – AgentBlazer",org:"Salesforce & Smart Bridge",date:"Dec 2025",status:"Completed",desc:"Core Salesforce CRM concepts and basic development through practical exercises and a mini project."},
+];
+const grid=document.getElementById("certs-grid");
+certs.forEach((c,i)=>{
+  const d=document.createElement("div");
+  d.className="cert-card";
+  d.innerHTML=`
+    <div class="cert-header">
+      <div class="cert-icon">${c.icon}</div>
+      <div>
+        <div class="cert-name">${c.name}</div>
+        <div class="cert-org">${c.org}</div>
+      </div>
+    </div>
+    <div class="cert-details">
+      <div style="margin-bottom:6px;color:#cbd5e1">${c.desc}</div>
+      <div style="font-size:11px;color:#4ade80;margin-bottom:6px">${c.status}</div>
+      <div class="cert-date">${c.date}</div>
+    </div>
+    <div class="cert-arrow">▾</div>
+  `;
+  d.onclick=()=>d.classList.toggle("expanded");
+  grid.appendChild(d);
+});
+
+function scrollTo(id){
+  const el=document.getElementById(id);
+  if(el)el.scrollIntoView({behavior:"smooth"});
+}
+
+const canvas=document.getElementById("stars-canvas");
+const ctx=canvas.getContext("2d");
+let stars=[];
+function resize(){
+  canvas.width=window.innerWidth;
+  canvas.height=window.innerHeight;
+  stars=Array.from({length:180},()=>({
+    x:Math.random()*canvas.width,
+    y:Math.random()*canvas.height,
+    r:Math.random()*1.2+0.2,
+    o:Math.random()*0.6+0.1,
+    speed:Math.random()*0.3+0.05
+  }));
+}
+function drawStars(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  stars.forEach(s=>{
+    ctx.beginPath();
+    ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(255,255,255,${s.o})`;
+    ctx.fill();
+    s.o+=s.speed*0.01*Math.sin(Date.now()*0.001+s.x);
+  });
+  requestAnimationFrame(drawStars);
+}
+resize();
+window.addEventListener("resize",resize);
+drawStars();
+</script>
